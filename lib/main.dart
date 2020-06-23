@@ -1,3 +1,6 @@
+
+import 'package:expensetracker/widgets/transaction_add.dart';
+import 'package:expensetracker/widgets/transaction_item.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -16,6 +19,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,17 +27,20 @@ class MyHomePage extends StatelessWidget {
         title: Text('Expense App'),
       ),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Card(child:
-            Text('Chart'),
+          Container(
+            child: Card(
+              color: Colors.blue,
+              child: Text('Chart'),
+              elevation: 5,
+            ),
           ),
-
-          Card(child:
-            Text('Transactions'),
-          ),
+          AddTransaction(),
+          TransactionView(),
         ],
       ),
     );
   }
 }
-
