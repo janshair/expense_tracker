@@ -1,20 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class AddTransaction extends StatelessWidget {
+class AddTransaction extends StatefulWidget {
+  final Function clickHandler;
 
+  AddTransaction(this.clickHandler);
 
+  @override
+  _AddTransactionState createState() => _AddTransactionState();
+}
+
+class _AddTransactionState extends State<AddTransaction> {
   final TextEditingController titleController = TextEditingController();
+
   final TextEditingController amountController = TextEditingController();
 
-  void _onPressedAddTransaction() {
-    print(titleController.text);
-    print(amountController.text);
+  void _onClickAddTransaction(){
+    if(titleController.text.isEmpty || amountController.text.isEmpty){
+      return;
+    }
+    widget.clickHandler(titleController.text,
+        double.parse(amountController.text));
+    Navigator.of(context).pop();
   }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(15),
       child: Card(
         elevation: 5,
         child: Column(
@@ -24,7 +36,7 @@ class AddTransaction extends StatelessWidget {
 //              decoration: InputDecoration(hintText: 'Date Time'),
 //              keyboardType: TextInputType.datetime,
 //            ),
-            TextFormField(
+            TextField(
               decoration: InputDecoration(hintText: 'Title'),
               keyboardType: TextInputType.text,
               controller: titleController,
@@ -35,21 +47,20 @@ class AddTransaction extends StatelessWidget {
 //                return null;
 //              },
             ),
-            TextFormField(
+            TextField(
               decoration: InputDecoration(hintText: 'Amount'),
               keyboardType: TextInputType.numberWithOptions(decimal: true),
               controller: amountController,
+              onSubmitted: (_) => _onClickAddTransaction,
             ),
-            FlatButton(
-              child: Text(
-                'Add Transaction',
-                style:
-                    TextStyle(
-                        color: Colors.blue,
-                        fontWeight: FontWeight.bold),
-              ),
-              onPressed: _onPressedAddTransaction,
-            )
+            RaisedButton(
+                color: Colors.blueAccent,
+                child: Text(
+                  'Add Transaction',
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+                onPressed: _onClickAddTransaction)
           ],
         ),
       ),
