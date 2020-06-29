@@ -9,57 +9,51 @@ class TransactionView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 300,
-      child: transactions.isEmpty ? Column(children: <Widget>[
-        Text('No Transactions yet'),
-        SizedBox(height: 20,),
-        Container(
-            height: 200,
-            child: Image.asset('assets/image/waiting.png', fit: BoxFit.cover,))
-      ],) : ListView.builder(itemBuilder: (ctx, index) {
-        return Card(
-          elevation: 5,
-          margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      transactions[index]
-                          .title,
-                      textAlign: TextAlign.left,
-                      style: Theme.of(context).textTheme.headline6,
-                    ),
-                    Text(
-                      DateFormat('yyyy-MM-dd HH:MM').format(transactions[index]
-                          .time),
-                      textAlign: TextAlign.left,
-                      style: TextStyle(fontSize: 12, color: Colors.black38),
-                    ),
-                  ],
+    return Flexible(
+      fit: FlexFit.tight,
+      child: Container(
+        child: transactions.isEmpty ? Column(children: <Widget>[
+          Text('No Transactions yet'),
+          SizedBox(height: 20,),
+          Container(
+              height: 200,
+              child: Image.asset('assets/image/waiting.png', fit: BoxFit.cover,))
+        ],) : ListView.builder(itemBuilder: (ctx, index) {
+          return Card(
+            elevation: 5,
+            margin: EdgeInsets.symmetric(vertical: 8, horizontal: 5),
+            child: Dismissible(
+              key: Key(transactions[index].id) ,
+              direction: DismissDirection.horizontal,
+              onDismissed: (direction) {},
+              background: Container(
+                color: Colors.red,
+                child: IconButton(
+                  onPressed: () {},
+                  icon: Icon(Icons.delete, color: Colors.white,),),
+              ),
+              secondaryBackground: Container(
+              color: Colors.black,
+              child: IconButton(
+                onPressed: () {},
+                icon: Icon(Icons.map, color: Colors.white,),),
+            ),
+
+              child: ListTile(
+                leading: CircleAvatar(radius: 30, child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: FittedBox(child: Text(transactions[index].amount.toStringAsFixed(0))),
                 ),
+                ),
+                title: Text(transactions[index].title, style: Theme.of(context).textTheme.headline6,),
+                subtitle: Text(DateFormat.yMMMd().format(transactions[index].time)),
+                trailing: Text('£${transactions[index].amount}', style: TextStyle(color: getTransactionViewColor(context, transactions[index])),),
               ),
-              Padding(
-                padding: EdgeInsets.all(10),
-                child: Text('£ ${transactions[index]
-                    .amount.toStringAsFixed(2)}'.replaceAll('-', ''),
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        color: getTransactionViewColor(context,transactions[index])
-                    )),
-              ),
-            ],
-          ),
-        );
-      },
-      itemCount: transactions.length,),
+            ),
+          );
+        },
+        itemCount: transactions.length,),
+      ),
     );
   }
 

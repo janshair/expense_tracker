@@ -25,6 +25,9 @@ class MyApp extends StatelessWidget {
             fontFamily: 'OpenSans',
             fontWeight: FontWeight.bold,
             fontSize: 18
+          ),
+          button: TextStyle(
+            color: Colors.white
           )
         ) ,
         appBarTheme: AppBarTheme(textTheme: ThemeData.light().textTheme.copyWith(
@@ -48,7 +51,16 @@ class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController amountController = TextEditingController();
 
-  final List<Transaction> transactionsList = [];
+  final List<Transaction> transactionsList = [
+    Transaction(id:'t1',
+    title: 'Shirt',
+    amount: 12,
+    time: DateTime.now()),
+    Transaction(id:'t9',
+        title: 'Pant',
+        amount: 19,
+        time: DateTime.now()),
+  ];
 
 
   List<Transaction> get recentTransactions {
@@ -57,12 +69,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
 
-  void _addTransaction(String txTitle, double txAmount) {
+  void _addTransaction(String txTitle, double txAmount, DateTime date) {
     final Transaction transaction = Transaction(
         title: txTitle,
         amount: txAmount,
         id: DateTime.now().toString(),
-        time: DateTime.now());
+        time: date);
     setState(() {
       transactionsList.add(transaction);
     });
