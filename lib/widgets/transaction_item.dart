@@ -32,13 +32,6 @@ class TransactionView extends StatelessWidget {
                   onPressed: () {},
                   icon: Icon(Icons.delete, color: Colors.white,),),
               ),
-              secondaryBackground: Container(
-              color: Colors.black,
-              child: IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.map, color: Colors.white,),),
-            ),
-
               child: ListTile(
                 leading: CircleAvatar(radius: 30, child: Padding(
                   padding: const EdgeInsets.all(10.0),

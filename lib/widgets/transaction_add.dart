@@ -12,6 +12,8 @@ class AddTransaction extends StatefulWidget {
 }
 
 class _AddTransactionState extends State<AddTransaction> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   final TextEditingController _titleController = TextEditingController();
 
   final TextEditingController _amountController = TextEditingController();
@@ -19,7 +21,9 @@ class _AddTransactionState extends State<AddTransaction> {
   DateTime _selectedDate= DateTime.now();
 
   void _onClickAddTransaction(){
-    if(_titleController.text.isEmpty || _amountController.text.isEmpty){
+    final FormState form = _formKey.currentState;
+
+    if(!form.validate()){
       return;
     }
     widget.clickHandler(_titleController.text,
@@ -48,50 +52,53 @@ class _AddTransactionState extends State<AddTransaction> {
         elevation: 5,
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: <Widget>[
-              TextFormField(
-                decoration: InputDecoration(hintText: 'Title'),
-                keyboardType: TextInputType.text,
-                controller: _titleController,
-                onFieldSubmitted: (_) => _onClickAddTransaction,
-                validator: (value) {
-                  if(value.isEmpty) {
-                    return 'title should not be empty';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                decoration: InputDecoration(hintText: 'Amount'),
-                keyboardType: TextInputType.numberWithOptions(decimal: true),
-                controller: _amountController,
-                validator: (value) {
-                  if(value.isEmpty) {
-                    return 'Value should not be empty';
-                  }
-                  return null;
-                },
-                onFieldSubmitted: (_) => _onClickAddTransaction,
-              ),
-              Row(children: <Widget>[
-                Text(_selectedDate == null ?'No Date Chosen:' :  DateFormat.yMMMd().format(_selectedDate)),
-                FlatButton(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: <Widget>[
+                TextFormField(
+                  decoration: InputDecoration(hintText: 'Title'),
+                  keyboardType: TextInputType.text,
+                  controller: _titleController,
+                  onFieldSubmitted: (_) => _onClickAddTransaction,
+                  validator: (value) {
+                    if(value.isEmpty) {
+                      return 'title should not be empty';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  decoration: InputDecoration(hintText: 'Amount'),
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  controller: _amountController,
+                  validator: (value) {
+                    if(value.isEmpty) {
+                      return 'Value should not be empty';
+                    }
+                    return null;
+                  },
+                  onFieldSubmitted: (_) => _onClickAddTransaction,
+                ),
+                Row(children: <Widget>[
+                  Text(_selectedDate == null ?'No Date Chosen:' :  DateFormat.yMMMd().format(_selectedDate)),
+                  FlatButton(
 //                color: Theme.of(context).textTheme.headline6.color,
-                  child: Text('Change Date',style: TextStyle(fontWeight: FontWeight.bold),),
-                  onPressed: _presentDatePicker,)
+                    child: Text('Change Date',style: TextStyle(fontWeight: FontWeight.bold),),
+                    onPressed: _presentDatePicker,)
+                ],
+                ),
+                RaisedButton(
+                    color: Colors.blueAccent,
+                    child: Text(
+                      'Add Transaction',
+                      style: TextStyle(
+                          color: Theme.of(context).textTheme.button.color, fontWeight: FontWeight.bold),
+                    ),
+                    onPressed: _onClickAddTransaction)
               ],
-              ),
-              RaisedButton(
-                  color: Colors.blueAccent,
-                  child: Text(
-                    'Add Transaction',
-                    style: TextStyle(
-                        color: Theme.of(context).textTheme.button.color, fontWeight: FontWeight.bold),
-                  ),
-                  onPressed: _onClickAddTransaction)
-            ],
+            ),
           ),
         ),
       ),
