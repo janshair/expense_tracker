@@ -50,6 +50,13 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> transactionsList = [
     Transaction(id: 't1', title: 'Shirt', amount: 12, time: DateTime.now()),
     Transaction(id: 't9', title: 'Pant', amount: 19, time: DateTime.now()),
+    Transaction
+      (
+        id: 't3',
+        title: 'Loan',
+        amount: -40.99,
+        time: DateTime.now()
+    ),
   ];
 
   List<Transaction> get recentTransactions {

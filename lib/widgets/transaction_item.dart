@@ -1,3 +1,5 @@
+import 'package:expensetracker/utils/money_calculator.dart';
+
 import '../model/transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -35,12 +37,18 @@ class TransactionView extends StatelessWidget {
               child: ListTile(
                 leading: CircleAvatar(radius: 30, child: Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: FittedBox(child: Text(transactions[index].amount.toStringAsFixed(0))),
+                  child: FittedBox(child: Text(transactions[index].amount.removeNegitive.toStringAsFixed(0))),
                 ),
                 ),
                 title: Text(transactions[index].title, style: Theme.of(context).textTheme.headline6,),
                 subtitle: Text(DateFormat.yMMMd().format(transactions[index].time)),
-                trailing: Text('£${transactions[index].amount}', style: TextStyle(color: getTransactionViewColor(context, transactions[index])),),
+                // trailing: Text('£${transactions[index].amount}\n Balance£${transactions[index].amount}', style: TextStyle(color: getTransactionViewColor(context, transactions[index])),),
+                trailing: RichText(maxLines: 2,text: TextSpan(children: [
+                  TextSpan(text: '£${transactions[index].amount.removeNegitive.toStringAsFixed(2)}', style: TextStyle(color: getTransactionViewColor(context, transactions[index]))),
+                  TextSpan(text: '\n'),
+                  TextSpan(text: '£${MoneyCalculator.calculateBalance(transactions, index).toStringAsFixed(2)}', style: TextStyle(color: Colors.grey)),
+                  
+                ]),),
               ),
             ),
           );

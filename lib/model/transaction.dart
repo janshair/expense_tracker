@@ -6,12 +6,14 @@ class Transaction {
   final String title;
   final double amount;
   final DateTime time;
+  final double balance;
 
   Transaction({
     @required this.id,
     @required this.title,
     @required this.amount,
-    @required this.time});
+    @required this.time,
+    this.balance=0});
 
 
 }

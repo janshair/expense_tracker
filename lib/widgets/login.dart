@@ -54,7 +54,9 @@ class _LoginWidgetState extends State<LoginWidget> {
                   }
                   return null;
                 },
-              )
+              ),
+              RaisedButton(onPressed: _onClickLogin,
+              child: Text('Login'),)
             ],
           ),
         ),
