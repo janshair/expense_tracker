@@ -1,3 +1,5 @@
+import 'package:expensetracker/model/transaction_type.dart';
+
 import './transaction_item.dart';
 import 'package:flutter/material.dart';
 import '../model/transaction.dart';
@@ -14,7 +16,8 @@ class _UserTransactionsState extends State<UserTransactions> {
         id: 't1',
         title: 'New Shoes',
         amount: 69.99,
-        time: DateTime.now()
+        time: DateTime.now(),
+        transactionType: TransactionType.Expense
     ),
 
     Transaction
@@ -22,15 +25,17 @@ class _UserTransactionsState extends State<UserTransactions> {
         id: 't2',
         title: 'New Trousers',
         amount: 40.99,
-        time: DateTime.now()
+        time: DateTime.now(),
+        transactionType: TransactionType.Expense
     ),
 
     Transaction
       (
         id: 't3',
         title: 'Loan',
-        amount: -40.99,
-        time: DateTime.now()
+        amount: 40.99,
+        time: DateTime.now(),
+        transactionType: TransactionType.Income
     ),
   ];
   @override

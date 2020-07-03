@@ -1,3 +1,5 @@
+import 'package:expensetracker/model/transaction_type.dart';
+
 import './widgets/transaction_add.dart';
 import './widgets/transaction_item.dart';
 import './widgets/chart.dart';
@@ -48,15 +50,16 @@ class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController amountController = TextEditingController();
 
   final List<Transaction> transactionsList = [
-    Transaction(id: 't1', title: 'Shirt', amount: 12, time: DateTime.now()),
-    Transaction(id: 't9', title: 'Pant', amount: 19, time: DateTime.now()),
-    Transaction
+     Transaction
       (
         id: 't3',
-        title: 'Loan',
-        amount: -40.99,
-        time: DateTime.now()
+        title: 'Hourly Wage',
+        amount: 400.99,
+        time: DateTime.now(),
+        transactionType: TransactionType.Income
     ),
+    Transaction(id: 't1', title: 'Shirt', amount: -12, time: DateTime.now(), transactionType: TransactionType.Expense),
+    Transaction(id: 't9', title: 'Pant', amount: -19, time: DateTime.now(), transactionType: TransactionType.Expense),
   ];
 
   List<Transaction> get recentTransactions {
@@ -66,12 +69,13 @@ class _MyHomePageState extends State<MyHomePage> {
         .toList();
   }
 
-  void _addTransaction(String txTitle, double txAmount, DateTime date) {
+  void _addTransaction(String txTitle, double txAmount, DateTime date, TransactionType txType) {
     final Transaction transaction = Transaction(
         title: txTitle,
-        amount: txAmount,
+        amount: txType == TransactionType.Expense ? txAmount * -1 : txAmount,
         id: DateTime.now().toString(),
-        time: date);
+        time: date,
+        transactionType: txType);
     setState(() {
       transactionsList.add(transaction);
     });

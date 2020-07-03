@@ -6,7 +6,7 @@ static double calculateBalance(List<Transaction> transactions, int currentIndex)
   if(currentIndex == 0) {
     return currentTransaction.amount;
   } else {
-    return currentTransaction.amount + transactions.getRange(0, currentIndex).fold(0, (previousValue, element) => previousValue + element.amount);
+    return transactions.getRange(0, currentIndex+1).fold(0, (previousValue, element) => previousValue + element.amount);
   }
 
 }
