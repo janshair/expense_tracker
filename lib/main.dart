@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      
       title: 'Expense Tracker',
       theme: ThemeData(
           primarySwatch: Colors.green,
@@ -30,12 +31,10 @@ class MyApp extends StatelessWidget {
               textTheme: ThemeData.light().textTheme.copyWith(
                       headline6: TextStyle(
                     fontFamily: 'Quicksand',
-                    fontSize: 20,
+                    fontSize: 20 ,
                   )))),
       // home: MyHomePage(),
-      routes: {
-        '/': (context) => MyHomePage()
-      },
+      routes: {'/': (context) => MyHomePage()},
     );
   }
 }
@@ -50,16 +49,24 @@ class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController amountController = TextEditingController();
 
   final List<Transaction> transactionsList = [
-     Transaction
-      (
+    Transaction(
         id: 't3',
         title: 'Hourly Wage',
         amount: 400.99,
         time: DateTime.now(),
-        transactionType: TransactionType.Income
-    ),
-    Transaction(id: 't1', title: 'Shirt', amount: -12, time: DateTime.now(), transactionType: TransactionType.Expense),
-    Transaction(id: 't9', title: 'Pant', amount: -19, time: DateTime.now(), transactionType: TransactionType.Expense),
+        transactionType: TransactionType.Income),
+    Transaction(
+        id: 't1',
+        title: 'Shirt',
+        amount: -12,
+        time: DateTime.now(),
+        transactionType: TransactionType.Expense),
+    Transaction(
+        id: 't9',
+        title: 'Pant',
+        amount: -19,
+        time: DateTime.now(),
+        transactionType: TransactionType.Expense),
   ];
 
   List<Transaction> get recentTransactions {
@@ -69,7 +76,8 @@ class _MyHomePageState extends State<MyHomePage> {
         .toList();
   }
 
-  void _addTransaction(String txTitle, double txAmount, DateTime date, TransactionType txType) {
+  void _addTransaction(
+      String txTitle, double txAmount, DateTime date, TransactionType txType) {
     final Transaction transaction = Transaction(
         title: txTitle,
         amount: txType == TransactionType.Expense ? txAmount * -1 : txAmount,
@@ -95,22 +103,34 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Expense App',style: TextStyle(color: Colors.white),),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () => _onPressedAddTransaction(context),
-          )
-        ],
+    final appBar = AppBar(
+      title: Text(
+        'Expense App',
+        style: TextStyle(color: Colors.white),
       ),
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(
+            Icons.settings,
+            color: Colors.white,
+          ),
+          onPressed: () {},
+        )
+      ],
+    );
+
+    return Scaffold(
+      appBar: appBar,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Chart(transactionsList),
-          TransactionView(transactions: transactionsList),
+          Container(
+            height: (MediaQuery.of(context).size.height - appBar.preferredSize.height) * 0.4,
+            child: Chart(transactionsList)),
+          Container(
+            height: (MediaQuery.of(context).size.height - appBar.preferredSize.height) * 0.6,
+            child: TransactionView(transactions: transactionsList)),
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

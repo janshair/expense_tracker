@@ -7,7 +7,7 @@ class Transaction {
   final String title;
   final double amount;
   final DateTime time;
-  final TransactionType transactionType;
+  final transactionType ;
   final double balance;
 
   Transaction({
