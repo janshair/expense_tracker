@@ -7,7 +7,7 @@ class Transaction {
   final String title;
   final double amount;
   final DateTime time;
-  final transactionType ;
+  final TransactionType transactionType ;
   final double balance;
 
   Transaction({
@@ -17,6 +17,4 @@ class Transaction {
     @required this.time,
     @required this.transactionType,
     this.balance=0});
-
-
 }

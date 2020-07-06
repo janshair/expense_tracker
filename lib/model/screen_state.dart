@@ -1,0 +1,3 @@
+enum ScreenState {
+  NONE,LOADING,SUCCESS,FAILURE
+}

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:expensetracker/utils/money_calculator.dart';
 
 class ChartBar extends StatelessWidget {
   final String label;
@@ -14,7 +15,7 @@ class ChartBar extends StatelessWidget {
         children: <Widget>[
           Container(
             height: constraints.maxHeight * 0.15,
-            child: FittedBox(child: Text(this.amount.toStringAsFixed(0))),
+            child: FittedBox(child: Text(this.amount.removeNegitive.toStringAsFixed(0))),
           ),
           SizedBox(
                         height: constraints.maxHeight * 0.05,
@@ -32,10 +33,10 @@ class ChartBar extends StatelessWidget {
                   ),
                 ),
                 FractionallySizedBox(
-                  heightFactor: pctOfTotal,
+                  heightFactor: pctOfTotal.removeNegitive,
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor,
+                      color: amount > 0 ? Theme.of(context).primaryColor : Colors.red,
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),

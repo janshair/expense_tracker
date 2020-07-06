@@ -1,5 +1,5 @@
-import 'package:expensetracker/model/transaction_type.dart';
-import 'package:expensetracker/utils/money_calculator.dart';
+import '../model/transaction_type.dart';
+import '../utils/money_calculator.dart';
 
 import '../model/transaction.dart';
 import 'package:flutter/material.dart';
@@ -24,23 +24,24 @@ class _TransactionViewState extends State<TransactionView> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: widget.transactions.isEmpty
-          ? Column(
-              children: <Widget>[
-                Text('No Transactions yet'),
-                SizedBox(
-                  height: 20,
-                ),
-                Container(
-                    height: 200,
-                    child: Image.asset(
-                      'assets/image/waiting.png',
-                      fit: BoxFit.cover,
-                    ))
-              ],
-            )
-          : ListView.builder(
+    return widget.transactions.isEmpty
+        ? Column(
+            children: <Widget>[
+              Text('No Transactions yet'),
+              SizedBox(
+                height: 20,
+              ),
+              Container(
+                  height: 200,
+                  child: Image.asset(
+                    'assets/image/waiting.png',
+                    fit: BoxFit.cover,
+                  ))
+            ],
+          )
+        : Align(
+            alignment: Alignment.topCenter,
+            child: ListView.builder(
               itemBuilder: (ctx, index) {
                 return Card(
                   elevation: 5,
@@ -59,7 +60,11 @@ class _TransactionViewState extends State<TransactionView> {
                         )),
                     child: ListTile(
                       leading: CircleAvatar(
-                        backgroundColor: widget.transactions[index].transactionType == TransactionType.Expense ? Colors.red: Theme.of(context).primaryColor,
+                        backgroundColor:
+                            widget.transactions[index].transactionType ==
+                                    TransactionType.Expense
+                                ? Colors.red
+                                : Theme.of(context).primaryColor,
                         radius: 30,
                         child: Padding(
                           padding: const EdgeInsets.all(10.0),
@@ -83,7 +88,6 @@ class _TransactionViewState extends State<TransactionView> {
                           TextSpan(
                             text:
                                 '£${widget.transactions[index].amount.removeNegitive.toStringAsFixed(2)}',
-                            
                             style: TextStyle(
                                 color: getTransactionViewColor(
                                     context, widget.transactions[index])),
@@ -101,8 +105,9 @@ class _TransactionViewState extends State<TransactionView> {
               },
               itemCount: widget.transactions.length,
               reverse: true,
+              shrinkWrap: true,
             ),
-    );
+          );
   }
 
   Color getTransactionViewColor(

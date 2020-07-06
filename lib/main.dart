@@ -1,4 +1,5 @@
 import 'package:expensetracker/model/transaction_type.dart';
+import 'package:expensetracker/widgets/login.dart';
 
 import './widgets/transaction_add.dart';
 import './widgets/transaction_item.dart';
@@ -6,16 +7,16 @@ import './widgets/chart.dart';
 import './model/transaction.dart';
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MyApp());
-}
+void main() =>   runApp(MyApp());
+  // SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      
       title: 'Expense Tracker',
       theme: ThemeData(
           primarySwatch: Colors.green,
@@ -28,13 +29,14 @@ class MyApp extends StatelessWidget {
                   fontSize: 18),
               button: TextStyle(color: Colors.white)),
           appBarTheme: AppBarTheme(
+              color: Colors.blue,
               textTheme: ThemeData.light().textTheme.copyWith(
                       headline6: TextStyle(
                     fontFamily: 'Quicksand',
-                    fontSize: 20 ,
+                    fontSize: 20,
                   )))),
-      // home: MyHomePage(),
-      routes: {'/': (context) => MyHomePage()},
+      home: MyHomePage(),
+      // routes: {'/': (context) => LoginWidget()},
     );
   }
 }
@@ -48,24 +50,25 @@ class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController amountController = TextEditingController();
 
+  bool _switchChart = true;
   final List<Transaction> transactionsList = [
     Transaction(
         id: 't3',
         title: 'Hourly Wage',
-        amount: 400.99,
-        time: DateTime.now(),
+        amount: 401,
+        time: DateTime.now().subtract(Duration(days: 6)),
         transactionType: TransactionType.Income),
     Transaction(
         id: 't1',
         title: 'Shirt',
         amount: -12,
-        time: DateTime.now(),
+        time: DateTime.now().subtract(Duration(days: 5)),
         transactionType: TransactionType.Expense),
     Transaction(
         id: 't9',
         title: 'Pant',
         amount: -19,
-        time: DateTime.now(),
+        time: DateTime.now().subtract(Duration(days: 4)),
         transactionType: TransactionType.Expense),
   ];
 
@@ -120,17 +123,44 @@ class _MyHomePageState extends State<MyHomePage> {
     );
 
     return Scaffold(
-      appBar: appBar,
+     appBar: appBar,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
+          
           Container(
-            height: (MediaQuery.of(context).size.height - appBar.preferredSize.height) * 0.4,
-            child: Chart(transactionsList)),
+
+            height: (MediaQuery.of(context).size.height -
+                        appBar.preferredSize.height) *
+                    0.05,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+              Text(
+                'Show Chart'),
+              Switch(
+                  value: _switchChart,
+                  onChanged: (value) {
+                    setState(() {
+                      _switchChart = value;
+                    });
+                  }),
+            ]),
+          ),
+          Visibility(
+            visible: _switchChart,
+            child: Container(
+                height: (MediaQuery.of(context).size.height -
+                        appBar.preferredSize.height) *
+                    0.4,
+                child: Chart(transactionsList)),
+          ),
           Container(
-            height: (MediaQuery.of(context).size.height - appBar.preferredSize.height) * 0.6,
-            child: TransactionView(transactions: transactionsList)),
+              height: (MediaQuery.of(context).size.height -
+                      appBar.preferredSize.height) *
+                  0.55,
+              child: TransactionView(transactions: transactionsList)),
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
