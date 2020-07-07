@@ -54,94 +54,99 @@ class _AddTransactionState extends State<AddTransaction> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.transparent,
-      child: Card(
-        elevation: 5,
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 15),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: <Widget>[
-                TextFormField(
-                  decoration: InputDecoration(hintText: 'Title'),
-                  keyboardType: TextInputType.text,
-                  controller: _titleController,
-                  onFieldSubmitted: (_) => _onClickAddTransaction,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'title should not be empty';
-                    }
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  decoration: InputDecoration(hintText: 'Amount'),
-                  keyboardType: TextInputType.numberWithOptions(decimal: true),
-                  controller: _amountController,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Value should not be empty';
-                    }
-                    return null;
-                  },
-                  onFieldSubmitted: (_) => _onClickAddTransaction,
-                ),
-                Row(
-                  children: <Widget>[
-                    Text(_selectedDate == null
-                        ? 'No Date Chosen:'
-                        : DateFormat.yMMMd().format(_selectedDate)),
-                    FlatButton(
+    return SingleChildScrollView(
+      child: Container(
+        color: Colors.transparent,
+        child: Card(
+          elevation: 5,
+          child: Container(
+            padding: EdgeInsets.only(left: 10,
+                right: 10,
+                top: 10,
+                bottom: (MediaQuery.of(context).viewInsets.bottom)- 10),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: <Widget>[
+                  TextFormField(
+                    decoration: InputDecoration(hintText: 'Title'),
+                    keyboardType: TextInputType.text,
+                    controller: _titleController,
+                    onFieldSubmitted: (_) => _onClickAddTransaction,
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'title should not be empty';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    decoration: InputDecoration(hintText: 'Amount'),
+                    keyboardType: TextInputType.numberWithOptions(decimal: true),
+                    controller: _amountController,
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Value should not be empty';
+                      }
+                      return null;
+                    },
+                    onFieldSubmitted: (_) => _onClickAddTransaction,
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Text(_selectedDate == null
+                          ? 'No Date Chosen:'
+                          : DateFormat.yMMMd().format(_selectedDate)),
+                      FlatButton(
 //                color: Theme.of(context).textTheme.headline6.color,
+                        child: Text(
+                          'Change Date',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        onPressed: _presentDatePicker,
+                      )
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Text('Transaction Type'),
+                      SizedBox(width: 10,),
+                      DropdownButton<String>(
+                        value: dropdownTransactionTypeValue.toString(),
+                        icon: Icon(Icons.arrow_downward),
+                        iconSize: 24,
+                        elevation: 16,
+                        style: Theme.of(context).textTheme.headline6,
+                        underline: Container(
+                          height: 2,
+                        ),
+                        onChanged: (String newValue) {
+                          setState(() {
+                            dropdownTransactionTypeValue = newValue;
+                          });
+                        },
+                        items: TransactionType.values.toList()
+                            .map<DropdownMenuItem<String>>((TransactionType txType) {
+                          return DropdownMenuItem<String>(
+                            value: txType.toString(),
+                            child: Text(txType.toString().split('.').last),
+                          );
+                        }).toList(),
+                      )
+                    ],
+                  ),
+                  RaisedButton(
+                      color: Colors.blueAccent,
                       child: Text(
-                        'Change Date',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        'Add Transaction',
+                        style: TextStyle(
+                            color: Theme.of(context).textTheme.button.color,
+                            fontWeight: FontWeight.bold),
                       ),
-                      onPressed: _presentDatePicker,
-                    )
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    Text('Transaction Type'),
-                    SizedBox(width: 10,),
-                    DropdownButton<String>(
-                      value: dropdownTransactionTypeValue.toString(),
-                      icon: Icon(Icons.arrow_downward),
-                      iconSize: 24,
-                      elevation: 16,
-                      style: Theme.of(context).textTheme.headline6,
-                      underline: Container(
-                        height: 2,
-                      ),
-                      onChanged: (String newValue) {
-                        setState(() {
-                          dropdownTransactionTypeValue = newValue;
-                        });
-                      },
-                      items: TransactionType.values.toList()
-                          .map<DropdownMenuItem<String>>((TransactionType txType) {
-                        return DropdownMenuItem<String>(
-                          value: txType.toString(),
-                          child: Text(txType.toString().split('.').last),
-                        );
-                      }).toList(),
-                    )
-                  ],
-                ),
-                RaisedButton(
-                    color: Colors.blueAccent,
-                    child: Text(
-                      'Add Transaction',
-                      style: TextStyle(
-                          color: Theme.of(context).textTheme.button.color,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    onPressed: _onClickAddTransaction)
-              ],
+                      onPressed: _onClickAddTransaction)
+                ],
+              ),
             ),
           ),
         ),
