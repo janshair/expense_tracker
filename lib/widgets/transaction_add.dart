@@ -1,7 +1,13 @@
-import 'package:expensetracker/model/transaction_type.dart';
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+
+import '../model/transaction_type.dart';
+import '../utils/money_calculator.dart';
+import 'adaptive/adaptive_button.dart';
 
 class AddTransaction extends StatefulWidget {
   final Function clickHandler;
@@ -29,7 +35,10 @@ class _AddTransactionState extends State<AddTransaction> {
     if (!form.validate()) {
       return;
     }
-    TransactionType type = dropdownTransactionTypeValue == TransactionType.Expense.toString() ? TransactionType.Expense : TransactionType.Income;
+    TransactionType type =
+        dropdownTransactionTypeValue == TransactionType.Expense.toString()
+            ? TransactionType.Expense
+            : TransactionType.Income;
     widget.clickHandler(_titleController.text,
         double.parse(_amountController.text), _selectedDate, type);
     Navigator.of(context).pop();
@@ -60,10 +69,11 @@ class _AddTransactionState extends State<AddTransaction> {
         child: Card(
           elevation: 5,
           child: Container(
-            padding: EdgeInsets.only(left: 10,
+            padding: EdgeInsets.only(
+                left: 10,
                 right: 10,
                 top: 10,
-                bottom: (MediaQuery.of(context).viewInsets.bottom)- 10),
+                bottom: ((MediaQuery.of(context).viewInsets.bottom) + 10)),
             child: Form(
               key: _formKey,
               child: Column(
@@ -83,7 +93,8 @@ class _AddTransactionState extends State<AddTransaction> {
                   ),
                   TextFormField(
                     decoration: InputDecoration(hintText: 'Amount'),
-                    keyboardType: TextInputType.numberWithOptions(decimal: true),
+                    keyboardType:
+                        TextInputType.numberWithOptions(decimal: true),
                     controller: _amountController,
                     validator: (value) {
                       if (value.isEmpty) {
@@ -111,7 +122,9 @@ class _AddTransactionState extends State<AddTransaction> {
                   Row(
                     children: <Widget>[
                       Text('Transaction Type'),
-                      SizedBox(width: 10,),
+                      SizedBox(
+                        width: 10,
+                      ),
                       DropdownButton<String>(
                         value: dropdownTransactionTypeValue.toString(),
                         icon: Icon(Icons.arrow_downward),
@@ -126,8 +139,10 @@ class _AddTransactionState extends State<AddTransaction> {
                             dropdownTransactionTypeValue = newValue;
                           });
                         },
-                        items: TransactionType.values.toList()
-                            .map<DropdownMenuItem<String>>((TransactionType txType) {
+                        items: TransactionType.values
+                            .toList()
+                            .map<DropdownMenuItem<String>>(
+                                (TransactionType txType) {
                           return DropdownMenuItem<String>(
                             value: txType.toString(),
                             child: Text(txType.toString().split('.').last),
@@ -136,15 +151,7 @@ class _AddTransactionState extends State<AddTransaction> {
                       )
                     ],
                   ),
-                  RaisedButton(
-                      color: Colors.blueAccent,
-                      child: Text(
-                        'Add Transaction',
-                        style: TextStyle(
-                            color: Theme.of(context).textTheme.button.color,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      onPressed: _onClickAddTransaction)
+                  AdaptiveButton('Add Transaction', _onClickAddTransaction),
                 ],
               ),
             ),

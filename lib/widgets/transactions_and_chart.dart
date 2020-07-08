@@ -1,10 +1,15 @@
+
+
+import 'dart:io';
+
 import 'package:expensetracker/model/transaction_type.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
 import './transaction_add.dart';
 import './transaction_item.dart';
 import './chart.dart';
 import '../model/transaction.dart';
-import 'package:flutter/material.dart';
-
 import 'settings/settings_screen.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -74,8 +79,32 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
     final _isLandscapeMode = MediaQuery.of(context).orientation == Orientation.landscape;
-    final appBar = AppBar(
+    final PreferredSizeWidget appBar = Platform.isIOS ? CupertinoNavigationBar(
+      leading: GestureDetector(
+          child: Icon(
+            CupertinoIcons.settings,
+            color: Theme.of(context).accentColor,
+          ),
+          onTap: () {
+            Navigator.push(context, CupertinoPageRoute(builder: (context) => SettingsScreen()));
+          },
+        ),
+      middle: Text(
+        'Expense App',
+        style: TextStyle(color: Theme.of(context).accentColor),
+      ),
+      trailing: GestureDetector(
+        child: Icon(
+          CupertinoIcons.add,
+          color: Theme.of(context).accentColor,
+        ),
+        onTap: () {
+          _onPressedAddTransaction(context);
+        },
+      ),
+    ): AppBar(
       title: Text(
         'Expense App',
         style: TextStyle(color: Colors.white),
@@ -92,52 +121,61 @@ class _MyHomePageState extends State<MyHomePage> {
         )
       ],
     );
+    var pageBody = SafeArea(child:  SingleChildScrollView(
+              child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
 
-    return Scaffold(
-      appBar: appBar,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
+            Container(
 
-          Container(
-
-            height: (MediaQuery.of(context).size.height -
-                appBar.preferredSize.height) *
-                0.05,
-            child: Visibility(
-              visible: _isLandscapeMode,
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                        'Show Chart'),
-                    Switch(
-                        value: _switchChart,
-                        onChanged: (value) {
-                          setState(() {
-                            _switchChart = value;
-                          });
-                        }),
-                  ]),
-            ),
-          ),
-          Visibility(
-            visible: !_isLandscapeMode || _switchChart,
-            child: Container(
-                height: (MediaQuery.of(context).size.height -
-                    appBar.preferredSize.height) *
-                    0.4,
-                child: Chart(transactionsList)),
-          ),
-          Container(
               height: (MediaQuery.of(context).size.height -
                   appBar.preferredSize.height) *
-                  0.5,
-              child: TransactionView(transactions: transactionsList)),
-        ],
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+                  0.05,
+              child: Visibility(
+                visible: _isLandscapeMode,
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                          'Show Chart',
+                          style: Theme.of(context).textTheme.headline6,),
+                      Switch.adaptive(
+                          activeColor: Theme.of(context).accentColor,
+                          value: _switchChart,
+                          onChanged: (value) {
+                            setState(() {
+                              _switchChart = value;
+                            });
+                          }),
+                    ]),
+              ),
+            ),
+            Visibility(
+              visible: !_isLandscapeMode || _switchChart,
+              child: Container(
+                  height: (MediaQuery.of(context).size.height -
+                      appBar.preferredSize.height) *
+                      0.4,
+                  child: Chart(transactionsList)),
+            ),
+            Container(
+                height: (mediaQuery.size.height -
+                    appBar.preferredSize.height) *
+                    0.5,
+                child: TransactionView(transactions: transactionsList)),
+          ],
+        ),
+      )
+    );
+    
+    return Platform.isIOS ? CupertinoPageScaffold(
+      child: pageBody,
+      navigationBar: appBar,
+      ): Scaffold(
+      appBar: appBar,
+      body: pageBody,
+       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () => _onPressedAddTransaction(context),

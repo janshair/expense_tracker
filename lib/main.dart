@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'widgets/transactions_and_chart.dart';
@@ -9,13 +11,15 @@ void main() =>   runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+  var primary = Colors.green;
+  var accent = Colors.blue;
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return  MaterialApp(
       title: 'Expense Tracker',
       theme: ThemeData(
-          primarySwatch: Colors.green,
-          accentColor: Colors.blue,
+          primarySwatch: primary,
+          accentColor: accent,
           fontFamily: 'OpenSans',
           textTheme: ThemeData.light().textTheme.copyWith(
               headline6: TextStyle(
