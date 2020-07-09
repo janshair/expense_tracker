@@ -1,4 +1,5 @@
 import 'package:expensetracker/model/screen_state.dart';
+import 'package:expensetracker/widgets/adaptive/adaptive_button.dart';
 import 'package:expensetracker/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -94,10 +95,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                           },
                         ),
                       ),
-                      RaisedButton(
-                        onPressed: _onClickLogin,
-                        child: Text('Login'),
-                      )
+                      AdaptiveButton('Login',_onClickLogin),
                     ],
                   ),
                 ),
