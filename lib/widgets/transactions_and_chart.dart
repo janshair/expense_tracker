@@ -121,51 +121,60 @@ class _MyHomePageState extends State<MyHomePage> {
         )
       ],
     );
-    var pageBody = SafeArea(child:  SingleChildScrollView(
-              child: Column(
+    var pageBody = SafeArea(
+
+        child:  SingleChildScrollView(
+              child: Container( decoration: BoxDecoration(color: Theme.of(context).accentColor),
+
+                child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
 
             Container(
 
-              height: (MediaQuery.of(context).size.height -
-                  appBar.preferredSize.height) *
-                  0.05,
-              child: Visibility(
-                visible: _isLandscapeMode,
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                          'Show Chart',
-                          style: Theme.of(context).textTheme.headline6,),
-                      Switch.adaptive(
-                          activeColor: Theme.of(context).accentColor,
-                          value: _switchChart,
-                          onChanged: (value) {
-                            setState(() {
-                              _switchChart = value;
-                            });
-                          }),
-                    ]),
-              ),
+                height: (MediaQuery.of(context).size.height -
+                    appBar.preferredSize.height) *
+                    0.05,
+                child: Visibility(
+                  visible: _isLandscapeMode,
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                            'Show Chart',
+                            style: Theme.of(context).textTheme.headline6,),
+                        Switch.adaptive(
+                            activeColor: Theme.of(context).accentColor,
+                            value: _switchChart,
+                            onChanged: (value) {
+                              setState(() {
+                                _switchChart = value;
+                              });
+                            }),
+                      ]),
+                ),
             ),
             Visibility(
-              visible: !_isLandscapeMode || _switchChart,
-              child: Container(
-                  height: (MediaQuery.of(context).size.height -
-                      appBar.preferredSize.height) *
-                      0.4,
-                  child: Chart(transactionsList)),
+                visible: !_isLandscapeMode || _switchChart,
+                child: Container(
+                    height: (MediaQuery.of(context).size.height -
+                        appBar.preferredSize.height) *
+                        0.4,
+                    child: Chart(transactionsList)),
             ),
-            Container(
-                height: (mediaQuery.size.height -
-                    appBar.preferredSize.height) *
-                    0.5,
-                child: TransactionView(transactions: transactionsList)),
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Container(
+                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10))),
+                    height: (mediaQuery.size.height -
+                        appBar.preferredSize.height) *
+                        0.5,
+                    child: TransactionView(transactions: transactionsList)),
+            ),
           ],
         ),
+              ),
       )
     );
     
