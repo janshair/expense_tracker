@@ -122,7 +122,8 @@ class _MyHomePageState extends State<MyHomePage> {
       ],
     );
     var pageBody = SafeArea(
-
+        bottom: true,
+        top: true,
         child:  SingleChildScrollView(
               child: Container( decoration: BoxDecoration(color: Theme.of(context).accentColor),
 
