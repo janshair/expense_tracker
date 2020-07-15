@@ -12,10 +12,16 @@ import 'adaptive/adaptive_button.dart';
 class AddTransaction extends StatefulWidget {
   final Function clickHandler;
 
-  AddTransaction(this.clickHandler);
+  AddTransaction(this.clickHandler){
+    print('Add Transaction Constructor');
+  }
 
   @override
-  _AddTransactionState createState() => _AddTransactionState();
+  _AddTransactionState createState(){
+    print('_AddTransactionState createState() ');
+    return _AddTransactionState();
+  } 
+
 }
 
 class _AddTransactionState extends State<AddTransaction> {
@@ -28,7 +34,28 @@ class _AddTransactionState extends State<AddTransaction> {
   DateTime _selectedDate = DateTime.now();
 
   String dropdownTransactionTypeValue = TransactionType.Expense.toString();
+  _AddTransactionState(){
+    print('Constructor Called');
+  }
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    print('initState()');
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(AddTransaction oldWidget) {
+    print('didUpdateWidget()');
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void dispose() {
+    print('dispose');
+    super.dispose();
+  }
   void _onClickAddTransaction() {
     final FormState form = _formKey.currentState;
 

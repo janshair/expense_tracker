@@ -15,7 +15,7 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver{
   final TextEditingController titleController = TextEditingController();
   final TextEditingController amountController = TextEditingController();
 
@@ -42,6 +42,25 @@ class _MyHomePageState extends State<MyHomePage> {
 
   bool _switchChart = true;
 
+@override
+void initState() {
+  print('Transactions and chart initState()');
+  WidgetsBinding.instance.addObserver(this);
+}
+
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print('didChangeAppLifecycleState $state');
+  }
+
+
+@override
+void dispose() {
+  print('Transactions and chart dispose()');
+  WidgetsBinding.instance.removeObserver(this);
+}
+  
   List<Transaction> get recentTransactions {
     return transactionsList
         .where((transaction) => transaction.time
@@ -65,6 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void _onPressedAddTransaction(BuildContext buildContext) {
     showModalBottomSheet(
         context: buildContext,
+        isScrollControlled: true,
         builder: (_) {
           return GestureDetector(
             onTap: () {},
@@ -74,49 +94,35 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 
-  Widget _buildLandscapeContent(Widget switchChart, Widget chartWidget, Widget txListWidget) {
-    return SafeArea(
-            bottom: true,
-            top: true,
-            child: SingleChildScrollView(
-              child: Container(
-                decoration: BoxDecoration(color: Theme.of(context).accentColor),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    switchChart,
-                _switchChart ? chartWidget : txListWidget,
-              ],
-            ),
-          ),
-        ));
+  List<Widget> _buildLandscapeContent(Widget switchChart, Widget chartWidget, Widget txListWidget) {
+    return [Container(
+      decoration: BoxDecoration(color: Theme.of(context).accentColor),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          switchChart,
+      _switchChart ? chartWidget : txListWidget,
+    ],
+    ),
+        )];
   }
 
-  Widget _buildPortriatContent(Widget chartWidget, Widget txListWidget) {
-    return SafeArea(
-            bottom: true,
-            top: true,
-            child: SingleChildScrollView(
-              child: Container(
-                decoration: BoxDecoration(color: Theme.of(context).accentColor),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    
-                 chartWidget , txListWidget,
-              ],
-            ),
-          ),
-        ));
+  List<Widget> _buildPortriatContent(Widget chartWidget, Widget txListWidget) {
+    return [Container(
+      decoration: BoxDecoration(color: Theme.of(context).accentColor),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          
+       chartWidget , txListWidget,
+    ],
+    ),
+        )];
   }
-  @override
-  Widget build(BuildContext context) {
-    final mediaQuery = MediaQuery.of(context);
-    final _isLandscapeMode =
-        MediaQuery.of(context).orientation == Orientation.landscape;
-    final PreferredSizeWidget appBar = Platform.isIOS
+  Widget _buildAppBar() {
+        return Platform.isIOS
         ? CupertinoNavigationBar(
             leading: GestureDetector(
               child: Icon(
@@ -162,61 +168,82 @@ class _MyHomePageState extends State<MyHomePage> {
               )
             ],
           );
-    var txListWidget = Padding(
-      padding: const EdgeInsets.all(10),
-      child: Container(
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(10), topRight: Radius.circular(10))),
-          height: (mediaQuery.size.height - appBar.preferredSize.height) * 0.5,
-          child: TransactionView(transactions: transactionsList)),
-    );
-    var chartWidget = Container(
-        height:
-            (MediaQuery.of(context).size.height - appBar.preferredSize.height) *
-                0.4,
-        child: Chart(transactionsList));
-    var switchChart = Container(
-                      height: (MediaQuery.of(context).size.height -
-                              appBar.preferredSize.height) *
-                          0.05,
-                      child: Visibility(
-                        visible: _isLandscapeMode,
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Show Chart',
-                                style: Theme.of(context).textTheme.headline6,
-                              ),
-                              Switch.adaptive(
-                                  activeColor: Theme.of(context).accentColor,
-                                  value: _switchChart,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _switchChart = value;
-                                    });
-                                  }),
-                            ]),
-                      ),
-                    );
-       
-    final pageBody = _isLandscapeMode ? _buildLandscapeContent(switchChart, chartWidget, txListWidget) : _buildPortriatContent(chartWidget, txListWidget);
-    return Platform.isIOS
-        ? CupertinoPageScaffold(
-            child: pageBody,
-            navigationBar: appBar,
-          )
-        : Scaffold(
-            appBar: appBar,
-            body: pageBody,
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerFloat,
-            floatingActionButton: FloatingActionButton(
-              child: Icon(Icons.add),
-              onPressed: () => _onPressedAddTransaction(context),
-            ),
-          );
-  }
-}
+    }
+  @override
+  Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
+    final _isLandscapeMode =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+    final PreferredSizeWidget appBar = _buildAppBar();
+        var txListWidget = Padding(
+          padding: const EdgeInsets.all(10),
+          child: Container(
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10), topRight: Radius.circular(10))),
+              height: (mediaQuery.size.height - appBar.preferredSize.height) * 0.5,
+              child: TransactionView(transactions: transactionsList)),
+        );
+        var chartWidget = Container(
+            height:
+                (MediaQuery.of(context).size.height - appBar.preferredSize.height) *
+                    0.4,
+            child: Chart(transactionsList));
+        var switchChart = Container(
+                          height: (MediaQuery.of(context).size.height -
+                                  appBar.preferredSize.height) *
+                              0.05,
+                          child: Visibility(
+                            visible: _isLandscapeMode,
+                            child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Show Chart',
+                                    style: Theme.of(context).textTheme.headline6,
+                                  ),
+                                  Switch.adaptive(
+                                      activeColor: Theme.of(context).accentColor,
+                                      value: _switchChart,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _switchChart = value;
+                                        });
+                                      }),
+                                ]),
+                          ),
+                        );
+           
+        final pageBody = SafeArea(
+                bottom: true,
+                top: true,
+                child: SingleChildScrollView(
+                  child: Container(
+                    decoration: BoxDecoration(color: Theme.of(context).accentColor),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: _isLandscapeMode ? _buildLandscapeContent(switchChart, chartWidget, txListWidget) :_buildPortriatContent(chartWidget, txListWidget),
+                ),
+              ),
+            ));
+        
+        
+        return Platform.isIOS
+            ? CupertinoPageScaffold(
+                child: pageBody,
+                navigationBar: appBar,
+              )
+            : Scaffold(
+                appBar: appBar,
+                body: pageBody,
+                floatingActionButtonLocation:
+                    FloatingActionButtonLocation.centerFloat,
+                floatingActionButton: FloatingActionButton(
+                  child: Icon(Icons.add),
+                  onPressed: () => _onPressedAddTransaction(context),
+                ),
+              );
+      }
+    }
